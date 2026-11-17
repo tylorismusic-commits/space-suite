@@ -35,7 +35,7 @@ states and lets you switch them directly.
 ### Delay
 
 - **Digital**, **Tape**, **Analog**, **Ping-Pong**.
-- Host-synced divisions (1/1 … 1/32, dotted 1/8) or free time.
+- Tempo divisions (1/1 … 1/32, dotted 1/8) or free time. Sync uses the manual BPM knob in 0.1.0; host tempo sync is planned for 0.2.
 - Feedback, Tone, Mod, Width, Duck, Mix.
 - The current division or free-time value is shown under the time knob.
 
