@@ -254,12 +254,15 @@ void Panel::layout(const Shared& shared, const PanelState& state) {
     widgets_.push_back(p);
   }
 
-  // Top page tabs, in the header's utility strip.
-  static const char* kPageNames[3] = {"REVERB", "DELAY", "MOD"};
+  // Top page tabs, in signal-path order: MOD -> DELAY -> REVERB.
+  // The page values are still 0 = Reverb, 1 = Delay, 2 = Mod, so the default
+  // page remains Reverb even though it is the rightmost tab.
+  static const char* kPageNames[3] = {"MOD", "DELAY", "REVERB"};
+  static const int kPageOrder[3] = {2, 1, 0};
   for (int i = 0; i < 3; ++i) {
     Widget t{};
     t.kind = Kind::PageTab;
-    t.value = i;
+    t.value = kPageOrder[i];
     t.x = 600 + i * 138;
     t.y = 13;
     t.w = 130;
