@@ -349,6 +349,7 @@ void Panel::layout(const Shared& shared, const PanelState& state) {
       break;
     case 1:
       pill(P_DELAY_SYNC, 150, 190, 90, 24, "SYNC");
+      knob(P_BPM, 150, 280, 22, "BPM");
       if (shared.get(P_DELAY_SYNC) > 0.5) {
         knob(P_DELAY_DIV, 280, 280, 38, "DIVISION", {}, false, 9);
       } else {
@@ -563,7 +564,7 @@ void Panel::draw(cairo_t* cr, Shared& shared, const PanelState& state) {
          skin.legend.b);
     char bpm[32];
     std::snprintf(bpm, sizeof(bpm), "%.0f BPM", shared.get(P_BPM));
-    text(cr, bpm, 150, 236, 10, 0, skin.legendDim.r, skin.legendDim.g,
+    text(cr, bpm, 150, 320, 10, 1, skin.legendDim.r, skin.legendDim.g,
          skin.legendDim.b);
   }
 
