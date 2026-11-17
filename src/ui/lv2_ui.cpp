@@ -358,6 +358,8 @@ void uiPortEvent(LV2UI_Handle handle, uint32_t port, uint32_t size,
     case kMeterBase + 3: ui->shared.outPeakRDb.store(v); break;
     case kMeterBase + 4: ui->shared.inPeakDb.store(v); break;
     case kMeterBase + 5: ui->shared.outPeakDb.store(v); break;
+    case kMeterBase + 7: ui->shared.hostBpm.store(v); break;
+    case kMeterBase + 8: ui->shared.hostTempo.store(v > 0.5f); break;
     default: break;
   }
 }

@@ -462,6 +462,13 @@ void applyEvents(Plugin* s, const clap_input_events_t* in) {
       if (pv->param_id < P_COUNT && !s->shared.isDirty(pv->param_id)) {
         s->shared.setFromHost(pv->param_id, pv->value);
       }
+    } else if (hdr->type == CLAP_EVENT_TRANSPORT) {
+      const auto* t = reinterpret_cast<const clap_event_transport_t*>(hdr);
+      if (t->flags & CLAP_TRANSPORT_HAS_TEMPO) {
+        s->shared.hostBpm.store(static_cast<float>(t->tempo),
+                                std::memory_order_relaxed);
+        s->shared.hostTempo.store(true, std::memory_order_relaxed);
+      }
     }
   }
 }
@@ -721,7 +728,9 @@ clap_process_status pluginProcess(const clap_plugin_t* p, const clap_process_t* 
     std::memcpy(right, inR, frames * sizeof(float));
   }
 
-  s->engine.setControls(controlsFrom(s->shared), 0.0f, false);
+  s->engine.setControls(controlsFrom(s->shared),
+                        s->shared.hostBpm.load(std::memory_order_relaxed),
+                        s->shared.hostTempo.load(std::memory_order_relaxed));
 
   s->engine.process(left, right, static_cast<int>(frames), s->meters);
 

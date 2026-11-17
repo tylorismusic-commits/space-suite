@@ -352,7 +352,9 @@ void Panel::layout(const Shared& shared, const PanelState& state) {
       break;
     case 1:
       pill(P_DELAY_SYNC, 150, 190, 90, 24, "SYNC");
-      knob(P_BPM, 150, 280, 22, "BPM");
+      if (!(state.hostTempo && shared.get(P_DELAY_SYNC) > 0.5)) {
+        knob(P_BPM, 150, 280, 22, "BPM");
+      }
       if (shared.get(P_DELAY_SYNC) > 0.5) {
         knob(P_DELAY_DIV, 280, 280, 38, "DIVISION", {}, false, 9);
       } else {
@@ -530,6 +532,8 @@ void Panel::tick(const Shared& shared, PanelState& state) const {
   state.inLevelR = shared.inPeakRDb.load(std::memory_order_relaxed);
   state.outLevelL = shared.outPeakLDb.load(std::memory_order_relaxed);
   state.outLevelR = shared.outPeakRDb.load(std::memory_order_relaxed);
+  state.hostBpm = shared.hostBpm.load(std::memory_order_relaxed);
+  state.hostTempo = shared.hostTempo.load(std::memory_order_relaxed);
 }
 
 // ---------------------------------------------------------------------------
@@ -565,10 +569,18 @@ void Panel::draw(cairo_t* cr, Shared& shared, const PanelState& state) {
     }
     text(cr, readout, 280, 345, 12, 1, skin.legend.r, skin.legend.g,
          skin.legend.b);
-    char bpm[32];
-    std::snprintf(bpm, sizeof(bpm), "%.0f BPM", shared.get(P_BPM));
-    text(cr, bpm, 150, 320, 10, 1, skin.legendDim.r, skin.legendDim.g,
-         skin.legendDim.b);
+    char bpm[48];
+    if (state.hostTempo && shared.get(P_DELAY_SYNC) > 0.5) {
+      std::snprintf(bpm, sizeof(bpm), "HOST %.1f BPM", state.hostBpm);
+      text(cr, bpm, 150, 280, 10, 1, skin.legend.r, skin.legend.g,
+           skin.legend.b);
+      text(cr, "SYNCED TO HOST", 150, 296, 8.5, 1, skin.legendDim.r,
+           skin.legendDim.g, skin.legendDim.b);
+    } else {
+      std::snprintf(bpm, sizeof(bpm), "%.0f BPM", shared.get(P_BPM));
+      text(cr, bpm, 150, 320, 10, 1, skin.legendDim.r, skin.legendDim.g,
+           skin.legendDim.b);
+    }
   }
 
   if (page == 2) {

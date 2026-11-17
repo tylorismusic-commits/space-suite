@@ -24,6 +24,8 @@ struct PanelState {
   float inLevelR = -120.0f;
   float outLevelL = -120.0f;
   float outLevelR = -120.0f;
+  float hostBpm = 120.0f;
+  bool hostTempo = false;
 };
 
 class Panel {

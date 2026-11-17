@@ -38,6 +38,14 @@ public:
       apL_[i].prepare(static_cast<int>(sr_ * apMs[i] * 0.001f) + 1);
       apR_[i].prepare(static_cast<int>(sr_ * apMs[i] * 0.001f) + 1);
     }
+    static const float kSpringApMs[6] = {1.7f, 2.4f, 3.3f, 4.6f,
+                                         6.1f, 8.2f};
+    for (int i = 0; i < 6; ++i) {
+      springApL_[i].prepare(
+          static_cast<int>(sr_ * kSpringApMs[i] * 0.001f) + 1);
+      springApR_[i].prepare(
+          static_cast<int>(sr_ * kSpringApMs[i] * 0.001f) + 1);
+    }
     mix_.setTime(25.0f, sr_);
     widthS_.setTime(30.0f, sr_);
     duckS_.setTime(30.0f, sr_);
@@ -87,7 +95,7 @@ public:
         g *= 0.97f;  // Room decays a little faster.
       }
       if (mode_ == 3) {
-        g *= 0.96f;  // Spring is shorter and darker.
+        g *= 0.92f;  // Spring is shorter, darker and more damped.
       }
       fb_[i] = g;
     }
@@ -138,8 +146,9 @@ public:
     float dL[8], dR[8];
     for (int i = 0; i < 8; ++i) {
       lenCur_[i] += (len_[i] - lenCur_[i]) * 0.0008f;
+      const float modDepth = mode_ == 3 ? 0.0012f : 0.0007f;
       const float mod =
-          0.0007f * sr_ * std::sin(modPhase_ + static_cast<float>(i) * 0.7f);
+          modDepth * sr_ * std::sin(modPhase_ + static_cast<float>(i) * 0.7f);
       const float len = hdsp::clampf(lenCur_[i] + mod, 4.0f,
                                      static_cast<float>(maxSamples_ - 3));
       dL[i] = lineL_[i].read(len);
@@ -177,6 +186,14 @@ public:
     const float side = 0.5f * (wetL - wetR) * width;
     wetL = mid + side;
     wetR = mid - side;
+    if (mode_ == 3) {
+      // Short dispersive allpass chain: the chirpy, springy tail that the
+      // FDN alone does not produce.
+      for (int i = 0; i < 6; ++i) {
+        wetL = springApL_[i].process(wetL, 0.68f);
+        wetR = springApR_[i].process(wetR, 0.68f);
+      }
+    }
 
     const float duck = duckS_.next();
     const float duckGain = 1.0f - duck * hdsp::clampf(duckEnv_ * 8.0f, 0.0f, 1.0f);
@@ -201,6 +218,10 @@ public:
     for (int i = 0; i < 4; ++i) {
       apL_[i].reset();
       apR_[i].reset();
+    }
+    for (int i = 0; i < 6; ++i) {
+      springApL_[i].reset();
+      springApR_[i].reset();
     }
     duckEnv_ = 0.0f;
     modPhase_ = 0.0f;
@@ -277,6 +298,7 @@ private:
   int preWrite_ = 0;
   Line lineL_[8], lineR_[8];
   Allpass apL_[4], apR_[4];
+  Allpass springApL_[6], springApR_[6];
   std::vector<float> preL_, preR_;
   float len_[8] = {};
   float lenCur_[8] = {};

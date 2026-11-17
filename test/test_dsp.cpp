@@ -189,6 +189,53 @@ int main() {
     check(peak < 8.0f, "extreme settings do not run away");
   }
 
+
+  {
+    // Host tempo overrides the manual BPM.
+    Engine engine;
+    engine.prepare(kSr);
+    Controls c;
+    c.delayOn = true;
+    c.delaySync = true;
+    c.bpm = 120.0f;
+    engine.setControls(c, 91.0f, true);
+    check(std::fabs(engine.bpm() - 91.0f) < 1e-5f && engine.hostTempo(),
+          "host tempo overrides the manual delay BPM");
+  }
+
+  {
+    // Spring refinement: the dispersive tail is present and decays.
+    Engine engine;
+    engine.prepare(kSr);
+    Controls c;
+    c.reverbOn = true;
+    c.reverbMode = 3;
+    c.reverbSize = 55.0f;
+    c.reverbDecay = 4.0f;
+    c.reverbTone = 45.0f;
+    c.reverbWidth = 55.0f;
+    c.reverbDuck = 0.0f;
+    c.reverbMix = 100.0f;
+    c.delayOn = false;
+    c.modOn = false;
+    c.mix = 1.0f;
+    engine.setControls(c, 0.0f, false);
+    engine.reset();
+    const int n = static_cast<int>(kSr * 2.0f);
+    std::vector<float> l(n, 0.0f), r(n, 0.0f);
+    l[0] = r[0] = 0.8f;
+    processBlocks(engine, l, r);
+    const double early = rms(l, static_cast<size_t>(kSr * 0.05f),
+                             static_cast<size_t>(kSr * 0.25f));
+    const double late = rms(l, static_cast<size_t>(kSr * 1.5f),
+                            static_cast<size_t>(kSr * 2.0f));
+    std::printf("  spring impulse tail %.1f -> %.1f dB\n",
+                20.0 * std::log10(std::max(1e-12, early)),
+                20.0 * std::log10(std::max(1e-12, late)));
+    check(early > 1e-5 && late < early, "spring tail is audible and decays");
+    check(finite(l) && finite(r), "spring tail stays finite");
+  }
+
   std::printf("%d failure(s)\n", gFailures);
   return gFailures == 0 ? 0 : 1;
 }

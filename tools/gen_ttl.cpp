@@ -141,8 +141,16 @@ std::string portBlock(int index, const char* symbol, const char* name,
     }
     out << " ;\n";
   }
+  const char* unitUri = nullptr;
   if (unit) {
-    out << "        units:unit units:" << unit << " ;\n";
+    if (std::strcmp(unit, "dB") == 0) unitUri = "db";
+    else if (std::strcmp(unit, "Hz") == 0) unitUri = "hz";
+    else if (std::strcmp(unit, "%") == 0) unitUri = "pc";
+    else if (std::strcmp(unit, "ms") == 0) unitUri = "ms";
+    else if (std::strcmp(unit, "BPM") == 0) unitUri = "bpm";
+  }
+  if (unitUri) {
+    out << "        units:unit units:" << unitUri << " ;\n";
   }
   if (output) {
     // Meters are not user controls; keep generic UIs from rendering sliders.
@@ -162,6 +170,8 @@ std::string buildPluginTtl() {
   out << "@prefix units: <http://lv2plug.in/ns/extensions/units#> .\n";
   out << "@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .\n";
   out << "@prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .\n";
+  out << "@prefix atom: <http://lv2plug.in/ns/ext/atom#> .\n";
+  out << "@prefix time: <http://lv2plug.in/ns/ext/time#> .\n";
   out << "@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n";
   out << "@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .\n";
   out << "@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n";
@@ -237,6 +247,52 @@ std::string buildPluginTtl() {
     p << "        lv2:designation lv2:latency ;\n";
     p << "        lv2:portProperty pprops:notOnGUI ;\n";
     p << "        pg:group <" << groupUri("Latency") << "> ;\n";
+    p << "    ]";
+    ports.push_back(p.str());
+  }
+
+  {
+    std::ostringstream p;
+    p << "    [\n";
+    p << "        a lv2:OutputPort , lv2:ControlPort ;\n";
+    p << "        lv2:index " << index++ << " ;\n";
+    p << "        lv2:symbol \"host_bpm\" ;\n";
+    p << "        lv2:name \"Host BPM\" ;\n";
+    p << "        lv2:default 120 ;\n";
+    p << "        lv2:minimum 1 ;\n";
+    p << "        lv2:maximum 1000 ;\n";
+    p << "        lv2:portProperty pprops:notOnGUI ;\n";
+    p << "        pg:group <" << groupUri("Meter") << "> ;\n";
+    p << "    ]";
+    ports.push_back(p.str());
+  }
+  {
+    std::ostringstream p;
+    p << "    [\n";
+    p << "        a lv2:OutputPort , lv2:ControlPort ;\n";
+    p << "        lv2:index " << index++ << " ;\n";
+    p << "        lv2:symbol \"host_tempo\" ;\n";
+    p << "        lv2:name \"Host Tempo Active\" ;\n";
+    p << "        lv2:default 0 ;\n";
+    p << "        lv2:minimum 0 ;\n";
+    p << "        lv2:maximum 1 ;\n";
+    p << "        lv2:integer true ;\n";
+    p << "        lv2:portProperty pprops:notOnGUI ;\n";
+    p << "        pg:group <" << groupUri("Meter") << "> ;\n";
+    p << "    ]";
+    ports.push_back(p.str());
+  }
+  {
+    std::ostringstream p;
+    p << "    [\n";
+    p << "        a lv2:InputPort , atom:AtomPort ;\n";
+    p << "        lv2:index " << index++ << " ;\n";
+    p << "        lv2:symbol \"time\" ;\n";
+    p << "        lv2:name \"Time\" ;\n";
+    p << "        lv2:designation time:position ;\n";
+    p << "        atom:bufferType atom:Sequence ;\n";
+    p << "        atom:supports time:Position ;\n";
+    p << "        lv2:portProperty pprops:notOnGUI ;\n";
     p << "    ]";
     ports.push_back(p.str());
   }

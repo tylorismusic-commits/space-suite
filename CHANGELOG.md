@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 — 2026-11-17
+
+- Delay host sync: CLAP transport tempo and LV2 `time:Position` are read; the
+  BPM control is hidden while host sync is active and manual BPM remains the
+  fallback.
+- Spring reverb refined with a six-stage short dispersive allpass tail, stronger
+  damping and deeper size/line movement.
+- Fixed LV2 unit metadata for percent, dB, Hz, ms and BPM.
+- Tests: host tempo override and spring tail decay.
+
 ## 0.1.0 — 2026-11-16
 
 - First complete Space Suite build.

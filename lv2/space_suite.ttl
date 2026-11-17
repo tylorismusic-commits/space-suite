@@ -5,6 +5,8 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
 @prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix time: <http://lv2plug.in/ns/ext/time#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -21,7 +23,7 @@
     ] ;
     doap:homepage <https://github.com/tylorismusic-commits/space-suite> ;
     lv2:majorVersion 0 ;
-    lv2:minorVersion 1 ;
+    lv2:minorVersion 2 ;
     lv2:microVersion 0 ;
     lv2:binary <space_suite.so> ;
     rdfs:seeAlso <manifest.ttl> ;
@@ -84,7 +86,7 @@
         lv2:default 0 ;
         lv2:minimum -18 ;
         lv2:maximum 18 ;
-        units:unit units:dB ;
+        units:unit units:db ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#global> ;
     ] ,
     [
@@ -95,7 +97,7 @@
         lv2:default 0 ;
         lv2:minimum -18 ;
         lv2:maximum 18 ;
-        units:unit units:dB ;
+        units:unit units:db ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#global> ;
     ] ,
     [
@@ -106,7 +108,7 @@
         lv2:default 100 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#global> ;
     ] ,
     [
@@ -144,7 +146,7 @@
         lv2:default 50 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -155,7 +157,6 @@
         lv2:default 2.4 ;
         lv2:minimum 0.3 ;
         lv2:maximum 12 ;
-        units:unit units:s ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -177,7 +178,7 @@
         lv2:default 50 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -188,7 +189,7 @@
         lv2:default 70 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -199,7 +200,7 @@
         lv2:default 30 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -210,7 +211,7 @@
         lv2:default 30 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#reverb> ;
     ] ,
     [
@@ -303,7 +304,7 @@
         lv2:default 35 ;
         lv2:minimum 0 ;
         lv2:maximum 95 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -314,7 +315,7 @@
         lv2:default 50 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -325,7 +326,7 @@
         lv2:default 15 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -336,7 +337,7 @@
         lv2:default 50 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -347,7 +348,7 @@
         lv2:default 30 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -358,7 +359,7 @@
         lv2:default 25 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#delay> ;
     ] ,
     [
@@ -396,7 +397,7 @@
         lv2:default 0.35 ;
         lv2:minimum 0.05 ;
         lv2:maximum 10 ;
-        units:unit units:Hz ;
+        units:unit units:hz ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#modulation> ;
     ] ,
     [
@@ -407,7 +408,7 @@
         lv2:default 50 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#modulation> ;
     ] ,
     [
@@ -418,7 +419,7 @@
         lv2:default 20 ;
         lv2:minimum 0 ;
         lv2:maximum 95 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#modulation> ;
     ] ,
     [
@@ -429,7 +430,7 @@
         lv2:default 70 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#modulation> ;
     ] ,
     [
@@ -440,7 +441,7 @@
         lv2:default 40 ;
         lv2:minimum 0 ;
         lv2:maximum 100 ;
-        units:unit units:% ;
+        units:unit units:pc ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#modulation> ;
     ] ,
     [
@@ -451,7 +452,7 @@
         lv2:default 120 ;
         lv2:minimum 40 ;
         lv2:maximum 240 ;
-        units:unit units:BPM ;
+        units:unit units:bpm ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#global> ;
     ] ,
     [
@@ -462,7 +463,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -474,7 +474,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -486,7 +485,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -498,7 +496,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -510,7 +507,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -522,7 +518,6 @@
         lv2:default 0 ;
         lv2:minimum -120 ;
         lv2:maximum 24 ;
-        units:unit units:db ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
     ] ,
@@ -537,6 +532,39 @@
         lv2:designation lv2:latency ;
         lv2:portProperty pprops:notOnGUI ;
         pg:group <https://github.com/tylorismusic-commits/space-suite#latency> ;
+    ] ,
+    [
+        a lv2:OutputPort , lv2:ControlPort ;
+        lv2:index 45 ;
+        lv2:symbol "host_bpm" ;
+        lv2:name "Host BPM" ;
+        lv2:default 120 ;
+        lv2:minimum 1 ;
+        lv2:maximum 1000 ;
+        lv2:portProperty pprops:notOnGUI ;
+        pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
+    ] ,
+    [
+        a lv2:OutputPort , lv2:ControlPort ;
+        lv2:index 46 ;
+        lv2:symbol "host_tempo" ;
+        lv2:name "Host Tempo Active" ;
+        lv2:default 0 ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:integer true ;
+        lv2:portProperty pprops:notOnGUI ;
+        pg:group <https://github.com/tylorismusic-commits/space-suite#meter> ;
+    ] ,
+    [
+        a lv2:InputPort , atom:AtomPort ;
+        lv2:index 47 ;
+        lv2:symbol "time" ;
+        lv2:name "Time" ;
+        lv2:designation time:position ;
+        atom:bufferType atom:Sequence ;
+        atom:supports time:Position ;
+        lv2:portProperty pprops:notOnGUI ;
     ] .
 
 

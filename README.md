@@ -1,6 +1,6 @@
 # Space Suite
 
-**Version 0.1.0** · GPL-3.0-or-later
+**Version 0.2.0** · GPL-3.0-or-later
 
 Reverb, delay and modulation in one CLAP + LV2 plugin for Linux. Space Suite
 puts the three “time and movement” jobs into one fixed chain, using the same
@@ -57,6 +57,15 @@ The factory bank covers Plate, Room, Hall, Spring, Delay, Mod, Ambient, Vocal,
 Drums and Mix Bus. **Space Ghost** is the mandatory vocal preset: big bright
 plate, dotted tape repeat, wide Dimension movement. It does not make you the
 actual Space Ghost, but it gets close.
+
+## 0.2.0
+
+- Delay sync follows the host tempo in CLAP and LV2 (`time:Position`), with a
+  manual BPM fallback. The BPM control hides when host sync is active.
+- Spring reverb gained a dedicated short dispersive allpass tail and stronger
+  damping for a more spring-like chirp.
+- Fixed LV2 unit metadata (`%`, dB, Hz, ms, BPM).
+- User preset saving is planned as the next cross-suite feature.
 
 ## Build
 

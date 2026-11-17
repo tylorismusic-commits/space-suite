@@ -152,6 +152,8 @@ public:
     inPeakRDb.store(-120.0f);
     outPeakLDb.store(-120.0f);
     outPeakRDb.store(-120.0f);
+    hostBpm.store(120.0f);
+    hostTempo.store(false);
   }
 
   double get(uint32_t p) const noexcept {
@@ -206,6 +208,8 @@ public:
   std::atomic<float> inPeakRDb;
   std::atomic<float> outPeakLDb;
   std::atomic<float> outPeakRDb;
+  std::atomic<float> hostBpm;
+  std::atomic<bool> hostTempo;
 
 private:
   std::atomic<double> values_[P_COUNT];
