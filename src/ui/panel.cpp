@@ -370,7 +370,7 @@ void Panel::layout(const Shared& shared, const PanelState& state) {
       knob(P_MOD_DEPTH, 400, 300, 40, "DEPTH");
       knob(P_MOD_FEEDBACK, 580, 300, 40, "FEEDBACK");
       knob(P_MOD_WIDTH, 760, 300, 40, "WIDTH");
-      knob(P_MOD_MIX, 480, 470, 36, "MIX");
+      knob(P_MOD_MIX, 480, 505, 36, "MIX");
       break;
   }
 }
@@ -571,8 +571,63 @@ void Panel::draw(cairo_t* cr, Shared& shared, const PanelState& state) {
          skin.legendDim.b);
   }
 
+  if (page == 2) {
+    // A small animated LFO display fills the Mod page and ties Rate, Depth and
+    // Width together without adding another control.
+    const Skin skin = skinFor(page);
+    const double x = 220.0, y = 366.0, w = 600.0, h = 58.0;
+    roundRect(cr, x, y, w, h, 4);
+    cairo_set_source_rgba(cr, 0.025, 0.027, 0.030, 0.96);
+    cairo_fill(cr);
+    cairo_set_line_width(cr, 1.0);
+    setRgb(cr, skin.tabOn, 0.65);
+    roundRect(cr, x + 0.5, y + 0.5, w - 1, h - 1, 4);
+    cairo_stroke(cr);
+
+    const double rate = std::clamp(shared.get(P_MOD_RATE), 0.05, 10.0);
+    const double depth = std::clamp(shared.get(P_MOD_DEPTH) / 100.0, 0.0, 1.0);
+    const double width = std::clamp(shared.get(P_MOD_WIDTH) / 100.0, 0.0, 1.0);
+    const double phase = nowMs() * 0.001 * rate;
+    auto lfo = [&](double phaseOffset, Rgb colour, double alpha) {
+      cairo_set_line_width(cr, 1.6);
+      setRgb(cr, colour, alpha);
+      for (int i = 0; i < static_cast<int>(w); ++i) {
+        const double u = i / (w - 1.0);
+        const double v = std::sin(2.0 * kPi * (u * 2.0 + phase + phaseOffset));
+        const double py = y + h * 0.5 - v * h * 0.34 * depth;
+        if (i == 0) cairo_move_to(cr, x + i, py);
+        else cairo_line_to(cr, x + i, py);
+      }
+      cairo_stroke(cr);
+    };
+    lfo(0.0, skin.knobIndicator, 0.95);
+    lfo(0.08 * width, skin.knobIndicator, 0.40);
+
+    cairo_set_line_width(cr, 1.0);
+    setRgb(cr, skin.legendDim, 0.35);
+    cairo_move_to(cr, x + 10, y + h * 0.5);
+    cairo_line_to(cr, x + w - 10, y + h * 0.5);
+    cairo_stroke(cr);
+    text(cr, "LFO", x + 12, y + 15, 9, 0, skin.legendDim.r, skin.legendDim.g,
+         skin.legendDim.b);
+    char rateText[32];
+    std::snprintf(rateText, sizeof(rateText), "%.2f Hz", rate);
+    text(cr, rateText, x + w - 12, y + 15, 9, 2, skin.legendDim.r,
+         skin.legendDim.g, skin.legendDim.b);
+  }
+
   for (const Widget& w : widgets_) {
     drawWidget(cr, w, shared, state, page);
+  }
+
+  if (dragParam_ >= 0) {
+    const uint32_t p = static_cast<uint32_t>(dragParam_);
+    const std::string value =
+        std::string(kParamSpecs[p].name) + "   " +
+        formatParamValue(shared, p, shared.get(p));
+    const Skin skin = skinFor(page);
+    text(cr, value.c_str(), kPanelWidth * 0.5, 629, 15, 1, skin.btnOn.r,
+         skin.btnOn.g, skin.btnOn.b);
   }
 
   if (editing_) drawTextEntry(cr, shared);
@@ -607,7 +662,7 @@ void Panel::drawHeader(cairo_t* cr, const Shared& shared,
   cairo_line_to(cr, kPanelWidth, 61.5);
   cairo_stroke(cr);
 
-  text(cr, "SPACE SUITE", 520, 38, 19, 1, 0.84, 0.86, 0.88);
+  text(cr, "SPACE SUITE", 500, 38, 19, 1, 0.84, 0.86, 0.88);
   drawPresetBar(cr, shared, state);
 }
 

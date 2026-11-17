@@ -43,11 +43,13 @@ states and lets you switch them directly.
 
 - **Chorus**, **Flanger**, **Phaser**, **Dimension**.
 - Rate, Depth, Feedback, Width, Mix.
+- A small animated LFO display shows rate, depth and stereo width.
 
 ## Global controls
 
 Input, Output, Mix, Bypass, and the chain enable buttons. The input and output
-meters are stereo, with the page accent colour.
+meters are stereo, with the page accent colour. While a knob is dragged, the
+footer shows its exact value.
 
 ## Presets
 
