@@ -86,6 +86,16 @@ target_link_libraries(space_panel_test PRIVATE PkgConfig::CAIRO PkgConfig::FREET
 target_compile_features(space_panel_test PRIVATE cxx_std_17)
 add_test(NAME space_panel COMMAND space_panel_test)
 
+add_executable(space_clap_host_test test/clap_host_test.cpp)
+target_include_directories(space_clap_host_test PRIVATE
+  "${CMAKE_SOURCE_DIR}/src"
+  "${CMAKE_SOURCE_DIR}/third_party/clap/include")
+target_link_libraries(space_clap_host_test PRIVATE ${CMAKE_DL_LIBS})
+target_compile_features(space_clap_host_test PRIVATE cxx_std_17)
+add_dependencies(space_clap_host_test space_suite_bundle)
+add_test(NAME space_clap_host
+  COMMAND space_clap_host_test "${CMAKE_BINARY_DIR}/clap/SpaceSuite.clap")
+
 add_executable(space_geometry_test test/test_geometry.cpp)
 target_include_directories(space_geometry_test PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(space_geometry_test PRIVATE PkgConfig::CAIRO)
@@ -119,6 +129,16 @@ add_test(NAME space_ttl
 pkg_check_modules(LILV QUIET IMPORTED_TARGET lilv-0)
 
 set(LV2_BUNDLE_DIR "${CMAKE_BINARY_DIR}/lv2/space-suite.lv2")
+
+if(LILV_FOUND)
+  add_executable(space_lv2_host_test test/lv2_host_test.cpp)
+  target_include_directories(space_lv2_host_test PRIVATE "${CMAKE_SOURCE_DIR}/src")
+  target_link_libraries(space_lv2_host_test PRIVATE PkgConfig::LILV)
+  target_compile_features(space_lv2_host_test PRIVATE cxx_std_17)
+  add_dependencies(space_lv2_host_test space_suite_lv2_bundle)
+  add_test(NAME space_lv2_host
+    COMMAND space_lv2_host_test "${LV2_BUNDLE_DIR}")
+endif()
 
 add_library(space_suite_lv2 MODULE src/space_suite_lv2.cpp)
 target_include_directories(space_suite_lv2 PRIVATE "${CMAKE_SOURCE_DIR}/src")

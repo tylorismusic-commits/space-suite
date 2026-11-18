@@ -1,6 +1,26 @@
 # Changelog
 
-## 0.2.0 — 2026-11-17
+## 0.2.0 — 2026-11-18
+
+### Preset handling
+
+- User presets: save, duplicate, recall, rename, delete and export to
+  `~/Documents/Space Suite Presets`.
+- Drag a `.space-suite` file onto the panel to import it; collisions get a
+  `(2)` suffix.
+- Rename conflicts show inline feedback; overwriting a different existing
+  preset asks for a second Enter.
+- Presets recall the editor page they were saved on.
+- Dirty state follows the live parameters, including host automation.
+- The browser rescans on open and while open.
+- Fixed hidden preset rows stealing clicks intended for the footer.
+
+### Audit
+
+- Added CLAP and LV2 load/process/state host tests.
+- Added a format/parse round-trip test for every control.
+
+### 0.2.0 — 2026-11-17
 
 - Delay host sync: CLAP transport tempo and LV2 `time:Position` are read; the
   BPM control is hidden while host sync is active and manual BPM remains the

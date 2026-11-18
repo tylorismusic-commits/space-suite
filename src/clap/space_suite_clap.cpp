@@ -28,6 +28,7 @@
 #include "version.hpp"
 #include "ui/geometry.hpp"
 #include "ui/panel.hpp"
+#include "ui/xdnd.hpp"
 
 namespace space {
 namespace {
@@ -168,6 +169,9 @@ private:
     XFlush(dpy);
 
     panel_.loadFont(bundleResourceDir());
+    xdnd_.init(dpy, win, [this](const std::string& path) {
+      panel_.importDroppedFile(shared_, state_, path);
+    });
     {
       std::lock_guard<std::mutex> lock(mutex_);
       display_ = dpy;
@@ -273,6 +277,7 @@ private:
 
   // Event coordinates are physical pixels; the panel works in logical units.
   void handleEvent(const XEvent& ev) {
+    if (xdnd_.handle(ev)) return;
     const double s = scale();
     switch (ev.type) {
       case ButtonPress: {
@@ -327,6 +332,7 @@ private:
   Shared& shared_;
   PanelState state_;
   Panel panel_;
+  XdndDropTarget xdnd_;
   std::atomic<double> scale_{1.0};
   std::atomic<bool> resizePending_{false};
   std::mutex mutex_;

@@ -28,6 +28,7 @@
 #include "params.hpp"
 #include "ui/geometry.hpp"
 #include "ui/panel.hpp"
+#include "ui/xdnd.hpp"
 
 namespace {
 
@@ -43,6 +44,7 @@ struct Ui {
 
   space::Shared shared;
   space::Panel panel;
+  space::XdndDropTarget xdnd;
   space::PanelState state;
 
   Display* dpy = nullptr;
@@ -103,6 +105,7 @@ struct Ui {
   }
 
   void handleEvent(const XEvent& ev) {
+    if (xdnd.handle(ev)) return;
     const double s = layoutScale();
     const double ox = offsetX();
     const double oy = offsetY();
@@ -305,6 +308,11 @@ LV2UI_Handle uiInstantiate(const LV2UI_Descriptor*, const char* /*pluginUri*/,
 
   std::string dir = bundlePath ? bundlePath : "";
   ui->panel.loadFont(dir);
+  ui->xdnd.init(ui->dpy, ui->win, [ui](const std::string& path) {
+    if (ui->panel.importDroppedFile(ui->shared, ui->state, path)) {
+      ui->dirty = true;
+    }
+  });
 
   // Ask for the logical size once, so a host that sizes the window from the
   // widget's preferred size opens us at 1040x640.  After this the host owns

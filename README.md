@@ -2,6 +2,9 @@
 
 **Version 0.2.0** · GPL-3.0-or-later
 
+Includes a full preset browser: factory presets plus your own saved, duplicated,
+imported and exported presets.
+
 Reverb, delay and modulation in one CLAP + LV2 plugin for Linux. Space Suite
 puts the three “time and movement” jobs into one fixed chain, using the same
 panel language as Comp Suite and Patina.
