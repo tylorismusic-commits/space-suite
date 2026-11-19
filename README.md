@@ -68,7 +68,8 @@ actual Space Ghost, but it gets close.
 - Spring reverb gained a dedicated short dispersive allpass tail and stronger
   damping for a more spring-like chirp.
 - Fixed LV2 unit metadata (`%`, dB, Hz, ms, BPM).
-- User preset saving is planned as the next cross-suite feature.
+- User preset saving is implemented; factory and user presets share the same
+  browser.
 
 ## Build
 
